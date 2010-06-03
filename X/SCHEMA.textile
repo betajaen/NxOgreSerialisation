@@ -76,5 +76,6 @@ p. The heightfield is measured in rows and columns, there should be (rows * colu
 |20|1|bool|No Edge boundaries|Either @0@ or @1@|
 |21|N ~1~|unsigned int|Sample Data|DATA|
 
+p. The header of the file for skeletional data should be @HF@ for Datatype, and Schema version as @3@.
 
 p. **Version**: 0.1, **Last modified**; 03-June-2010, **Authors:** Robin Southern
