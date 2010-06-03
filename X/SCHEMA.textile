@@ -46,8 +46,8 @@ A typical file header goes like this:
 |0|6|char|File ID|Exactly @NXOGRE@|
 |6|4|unsigned int|File Length|At least @14@|
 |10|2|char|Data type|Either @SK@, @HF@ |
-|12|2|unsigned short|Schema version for data|Exactly or at least @0@|
-|14|?|DATA|Remaining File Data|DATA|
+|12|2|unsigned short|Schema version|Exactly or at least @0@|
+|14|?|DATA|File Data|Either Skeleton or a HeightField|
 
 h2. CCD Skeletonal Data (Schema Version: 1)
 
@@ -59,7 +59,7 @@ p. CCD Skeletonal Data is a collection of vertices (3 floats or 12 bytes) and tr
 |4|N ~1~|float * 3|Vertex Data|Three floats per vertex|
 |4 + N ~1~|N ~2~|unsigned short * 3|Index Data|Three unsigned shorts per triangle|
 
-p. The header of the file for skeletional data should be @SK@ for Datatype, and Schema version as @1@.
+p. The header of the file for skeleton data should be @SK@ for datatype, and schema version as @1@.
 
 h2. Heightfield (Schema Version: 3)
 
@@ -76,6 +76,6 @@ p. The heightfield is measured in rows and columns, there should be (rows * colu
 |20|1|bool|No Edge boundaries|Either @0@ or @1@|
 |21|N ~1~|unsigned int|Sample Data|DATA|
 
-p. The header of the file for skeletional data should be @HF@ for Datatype, and Schema version as @3@.
+p. The header of the file for heightfield data should be @HF@ for datatype, and schema version as @3@.
 
 p. **Version**: 0.1, **Last modified**; 03-June-2010, **Authors:** Robin Southern
