@@ -1,0 +1,80 @@
+h1. NxOgre X-Binary File Schema
+
+h2. Abstract
+
+p. This document describes the file structure and allowable properties of X-Binary file format used by NxOgre. The files can store PhysX CCD Skeletons or PhysX Heightfields.
+
+h2. Compatibility
+
+p. These types of files are not directly readable by PhysX, they contain extra metadata and possible additional data that the PhysX loader interface cannot understand. Additional PhysX has no suitable functions or facilities to save or load CCD skeletons and height fields to a file.
+
+h2. Datatypes
+
+These are the standard lengths of C++ datatypes used within X-Binary files.
+
+|_. Type|_. Length|
+| @bool@ |1|
+| @char@ |1|
+| @unsigned char@ |1|
+| @short@ |2|
+| @unsigned short@ |2|
+| @int@ |4|
+| @unsigned short@ |4|
+| @float@ |4|
+| @double@ |8|
+| @std:string@ with null terminator|string.length() + 1|
+
+h2. Definitions
+
+|_. Type|_. Meaning|
+|Vertex|Position in 3D space. Represented by three floats; X,Y and Z|
+|Triangle|Triangle formed by three vertexes. Represented by three (a,b,c) unsigned int or unsigned shorts which reference a vertex by it's ID from it's position in an array or list|
+
+h2. File extensions
+
+p. Although not enforced it is recommended for clarity purposes that these file extensions are used; Meshes to use @xm@ or @xmesh@ and Heightfields to use @xh@ or @xheightfield@.
+
+
+h2. File header
+
+All X-Binary files use a common file header. It's purpose is to identifiy the type of file (An NxOgre X binary file), the total length of file, Schema version it was written under and the type of data held within it. 
+
+
+A typical file header goes like this:
+  
+|_. Position|_. Length|_. Type|_. Description|_. Typical Value|
+|0|6|char|File ID|Exactly @NXOGRE@|
+|6|4|unsigned int|File Length|At least @14@|
+|10|2|char|Data type|Either @SK@, @HF@ |
+|12|2|unsigned short|Schema version for data|Exactly or at least @0@|
+|14|?|DATA|Remaining File Data|DATA|
+
+h2. CCD Skeletonal Data (Schema Version: 1)
+
+p. CCD Skeletonal Data is a collection of vertices (3 floats or 12 bytes) and triangles (3 unsigned ints or 12 bytes). There can be up to 65535 vertices (or 786420 bytes) and up to 65535 triangles (or 393210 bytes)
+
+|_. Position|_. Length|_. Type|_. Description|_. Typical Value|
+|0|2|unsigned short|Number of Vertices|At least @1@|
+|2|2|unsigned short|Number of Triangles|At least @1@|
+|4|N ~1~|float * 3|Vertex Data|Three floats per vertex|
+|4 + N ~1~|N ~2~|unsigned short * 3|Index Data|Three unsigned shorts per triangle|
+
+p. The header of the file for skeletional data should be @SK@ for Datatype, and Schema version as @1@.
+
+h2. Heightfield (Schema Version: 3)
+
+p. Heightfield data is a collection of NxOgre HeightFieldSample; a 4 byte compressed piece of data containing for each point; it's height, tessellation and material data. It is normally referred and treated to as an unsigned int.
+
+p. The heightfield is measured in rows and columns, there should be (rows * columns) amount of samples witin the data.
+
+|_. Position|_. Length|_. Type|_. Description|_. Typical Value|
+|0|4|unsigned int|Number of Rows|At least @1@|
+|4|4|unsigned int|Number of Columns|At least @1@|
+|8|4|float|Heightfield thickness|Any value|
+|12|4|float|Vertical extent|Any value|
+|16|4|float|Convex Edge threshold|Must be positive|
+|20|1|bool|No Edge boundaries|Either @0@ or @1@|
+|21|N ~1~|unsigned int|Sample Data|DATA|
+
+
+p. **Version**: 0.1, **Last modified**; 03-June-2010, **Authors:** Robin Southern
